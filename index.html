@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=" />
+    <title></title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-database.js"></script>
+  </head>
+  <body>
+    <div class="startScreen">
+      <header class="bg-primary text-white header">
+        <h1 class="m-3">Scattegories Party Game</h1>
+      </header>
+      <div class="startScreenContent">
+        <h1>Welcome!</h1>
+        <div class="form">
+          <input class="screenNameText" type="text form-text" placeholder="Username">
+          <button class="lobbyBtn" id="createGameBtn" >Create Game</button>
+          <button class="lobbyBtn" id="joinGameBtn" >Join Game</button>
+        </div>
+      </div>
+    </div>
+    <div class="lobby">
+      <header class="bg-primary text-white header">
+        <h1 class="m-3">Scattegories Party Game</h1>
+      </header>
+      <section class="categories bg-dark">
+        <h3 class="ml-2 mt-1 text-white">Categories</h3>
+        <ol class="categoriesList"></ol>
+        <div class="ml-4 categoriesAnswers">
+          <div class="categoriesCol1">
+            <input
+              type="text"
+              class="categoriesInput form-text"
+              id="answer1"
+              placeholder="Question 1"
+            />
+            <input
+              type="text"
+              class="categoriesInput form-text"
+              id="answer2"
+              placeholder="Question 2"
+            />
+            <input
+              type="text"
+              class="categoriesInput form-text"
+              id="answer3"
+              placeholder="Question 3"
+            />
+            <input
+              type="text"
+              class="categoriesInput form-text"
+              id="answer4"
+              placeholder="Question 4"
+            />
+            <input
+              type="text"
+              class="categoriesInput form-text"
+              id="answer5"
+              placeholder="Question 5"
+            />
+          </div>
+          <div class="categoriesCol2">
+            <input
+              type="text"
+              class="categoriesInput form-text"
+              id="answer6"
+              placeholder="Question 6"
+            />
+            <input
+              type="text"
+              class="categoriesInput form-text"
+              id="answer7"
+              placeholder="Question 7"
+            />
+            <input
+              type="text"
+              class="categoriesInput form-text"
+              id="answer8"
+              placeholder="Question 8"
+            />
+            <input
+              type="text"
+              class="categoriesInput form-text"
+              id="answer9"
+              placeholder="Question 9"
+            />
+            <input
+              type="text"
+              class="categoriesInput form-text"
+              id="answer10"
+              placeholder="Question 10"
+            />
+          </div>
+        </div>
+      </section>
+      <section class="bg-dark text-white letter">
+        <h3 class="ml-2">Letter</h3>
+        <div class="letterWrapper">
+          <span class="theLetter text-primary"></span>
+        </div>
+      </section>
+      <section class="bg-dark text-white timer">
+        <h3 class="ml-2">Timer</h3>
+        <div class="timerWrapper">
+          <span class="theTimer text-primary">120</span>
+        </div>
+      </section>
+      <section class="bg-dark text-white leaderboard">
+        <h3 class="ml-2">Leaderboard</h3>
+        <p class="ml-3 text-white">(Coming soon)</p>
+      </section>
+      <section class="controls bg-dark">
+        <div class="controlWrapper">
+          <h4 class="text-center text-white font-weight-bold text-lg" id="gameIdLabel">Game ID: </h4>
+          <button class="btn btn-outline-light btn-lg mt-4" id="startBtn">
+            Start Game
+          </button>
+          <button class="btn btn-outline-light btn-lg mt-4" id="leaveBtn">
+            Leave Game
+          </button>
+        </div>
+      </section>
+    </div>
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+    <script src="script.js"></script>
+  </body>
+</html>

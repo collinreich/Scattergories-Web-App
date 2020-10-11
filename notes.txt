@@ -1,0 +1,21 @@
+- start at start screen, buttons are disabled until you choose a screen name. When you make a screen name you can either
+    create a new game lobby, or you can join an existing one. If you choose to join an existing one you will be prompted
+    the game lobby code.
+
+- anyone in a lobby should be able to see that game lobby's code, and the screen name of all the users in it under leaderboard
+
+- a lobby should have a max capacity that will be checked to prevent others from joining. This number should be shown to the
+    current lobby members as well
+
+- a lobby object in the database should have the list of users currently in it with their user IDs and all their info, 
+    the number of users currently in it, if the game is currently running, if all users are ready for the game to start, the lobby code,
+
+- a user object should have the unique userID, the screen name, if their ready, their answers, current points
+
+- !======= How do I want to measure points and display answers to the group? =======!
+
+- need a dictionary to check if a word is real
+
+- need a string formatter to make sure it matches the dictioaries
+
+- need a way to check if a word starts with a certain letter

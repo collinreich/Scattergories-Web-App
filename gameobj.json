@@ -1,0 +1,17 @@
+{
+    "gameID" : 1568,
+    "created" : "time",
+    "gameRunning" : false,
+    "maxPlayers" : 5,
+    "status" : "Waiting 1/5",
+    "playerCount" : 1,
+    "players" : {
+        "player1IdHere" : {
+            "userID" : 1564861535486,
+            "screenName" : "Collin",
+            "isReady" : false,
+            "answers" : [],
+            "currentScore" : 0
+        }
+    }
+}
