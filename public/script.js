@@ -171,7 +171,7 @@ class GameState {
     $lobbyStyle.css("border", "solid black 1px");
 
     $("body").find("header").css("gridArea", "header");
-    $("body").find("header").css("border", "solid black 1px");
+    $("body").find("header").css("border", "solid black 1px"); 
 
     $("body").find(".categories").css("gridArea", "categories");
     $("body").find(".categories").css("border", "solid black 1px");
@@ -313,16 +313,19 @@ class GameState {
     //Initialize the input fields to be disabled
     let $categoriesInputs = $("body").find(".categoriesInput");
     for (let i = 0; i < $categoriesInputs.length; i++) {
-      $categoriesInputs[i].disabled = true;
+      $categoriesInputs[i].disabled = false;
     };
 
     //Will disable the start button when the game is running
     gamesRef.child(this.gameID).child("gameRunning").on("value", function (dataSnapshot) {
+      for (let i = 0; i < $categoriesInputs.length; i++) {
+        $categoriesInputs[i].disabled = !$categoriesInputs[i].disabled;
+      }
       let isRunning = dataSnapshot.val();
-      if (isRunning === true) {
+      if (isRunning) {
         $("body").find("#startBtn").disabled = true;
       }
-      if (isRunning === false) {
+      else{
         $("body").find("#startBtn").disabled = false;
       }
     });
@@ -330,9 +333,6 @@ class GameState {
     //Start button code
     $("body").find("#startBtn").on("click", ()=> {
       gamesRef.child(this.gameID).child("gameRunning").set(true);
-      for (let i = 0; i < $categoriesInputs.length; i++) {
-        $categoriesInputs[i].disabled = !$categoriesInputs[i].disabled;
-      }
       for (let i = 0; i < $categoriesInputs.length; i++) {
         $categoriesInputs[i].value = "";
       }
@@ -393,7 +393,54 @@ function renderStartScreen(){
       </div>
   </div>`);
 
-  //TODO: Add all the startScreen CSS through JQuery
+  //All CSS classes being set
+  $("body").find(".startScreen").css("display", "block");
+  $("body").find(".startScreenContent").css("maxWidth", "600px");
+  $("body").find(".startScreenContent").css("margin", "0 auto");
+  $("body").find(".startScreenContent").css("padding", "80px 0");
+  $("body").find(".startScreenContent").css("height", "400px");
+  $("body").find(".startScreenContent").css("textAlign", "center");
+
+  $("body").find(".form").css("padding", "20px 0");
+  $("body").find(".form").css("position", "relative");
+  $("body").find(".form").css("zIndex", "2");
+
+  $("body").find(".screenNameText").css("display", "block");
+  $("body").find(".screenNameText").css("appearance", "none");
+  $("body").find(".screenNameText").css("outline", "0");
+  $("body").find(".screenNameText").css("border", "1px solid fade(white, 40%)");
+  $("body").find(".screenNameText").css("backgroundColor", "fade(white, 20%)");
+  $("body").find(".screenNameText").css("borderRadius", "3px");
+  $("body").find(".screenNameText").css("padding", "10px 15px");
+  $("body").find(".screenNameText").css("margin", "0 auto 10px auto");
+  $("body").find(".screenNameText").css("textAlign", "center");
+  $("body").find(".screenNameText").css("fontSize", "18px");
+  $("body").find(".screenNameText").css("color", "black");
+  $("body").find(".screenNameText").css("transitionDuration", "0.25s");
+  $("body").find(".screenNameText").css("fontWeight", "300");
+  $("body").find(".screenNameText").hover(function(){
+    $(this).attr("backgroundColor","fade(white, 40%)");
+  });
+  $("body").find(".screenNameText").focus(function(){
+    $(this).attr("backgroundColor","white");
+    $(this).attr("width","300px");
+  });
+
+  $("body").find(".lobbyBtn").css("fontWeight", "300");
+  $("body").find(".lobbyBtn").css("outline", "0");
+  $("body").find(".lobbyBtn").css("backgroundColor", "white");
+  $("body").find(".lobbyBtn").css("border", "0");
+  $("body").find(".lobbyBtn").css("padding", "10px 15px");
+  $("body").find(".lobbyBtn").css("borderRadius", "3px");
+  $("body").find(".lobbyBtn").css("width", "250px");
+  $("body").find(".lobbyBtn").css("cursor", "pointer");
+  $("body").find(".lobbyBtn").css("fontSize", "18px");
+  $("body").find(".lobbyBtn").css("transitionDuration", "0.25s");
+  $("body").find(".lobbyBtn").hover(function(){
+    $(this).attr("backgroundColor","rgb(245, 247, 249)");
+  });
+  
+
 
   $("body").find("#createGameBtn").on("click", ()=>{
     console.log('Create game button clicked.');

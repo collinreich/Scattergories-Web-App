@@ -1,8 +1,4 @@
-- start at start screen, buttons are disabled until you choose a screen name. When you make a screen name you can either
-    create a new game lobby, or you can join an existing one. If you choose to join an existing one you will be prompted
-    the game lobby code.
 
-- anyone in a lobby should be able to see that game lobby's code, and the screen name of all the users in it under leaderboard
 
 - a lobby should have a max capacity that will be checked to prevent others from joining. This number should be shown to the
     current lobby members as well
@@ -19,3 +15,9 @@
 - need a string formatter to make sure it matches the dictioaries
 
 - need a way to check if a word starts with a certain letter
+
+================== KNOWN BUGS ===================
+- only the person who presses start will be able to input answers -- likely because pressing start will disable or enable answer fields 
+    -- can probably fix by basing disable on gameRunning and not pressing start
+
+- if a user is in a running game, then leaves and immediately joins another game, it will keep the timer ticking and the categories on screen
