@@ -133,7 +133,7 @@ class GameState {
       this.playerCount = Object.keys(this.players).length;
       this.currentCategories = [];
       this.currentLetter = null;
-      this.timeLeft = 10;
+      this.timeLeft = 120;
     }
     else{
       this.gameID = gameJSON.gameID
