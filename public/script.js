@@ -8,6 +8,13 @@ const firebaseConfig = {
   appId: "1:372518034210:web:fceb7dbe02673231cb637b",
 };
 
+let uuid = localStorage.getItem("uuid");
+if (!uuid){
+  uuid = Math.floor(1000000000*Math.random());
+  localStorage.setItem("uuid", uuid);
+  //alert(`Your likely unique id is ${uuid}`);
+}
+
 let $gameScreenHTML = $(`
 <div class="lobby">
   <header class="bg-primary text-white header">
@@ -97,7 +104,7 @@ let $gameScreenHTML = $(`
   </section>
   <section class="bg-dark text-white leaderboard">
     <h3 class="ml-2">Leaderboard</h3>
-    <p class="ml-3 text-white"><ol></ol></p>
+    <p class="ml-3 text-white"><ol class = "leaderboardList"></ol></p>
   </section>
   <section class="controls bg-dark">
     <div class="controlWrapper">
@@ -118,7 +125,7 @@ const myDatabase = firebase.database();
 const gamesRef = myDatabase.ref("games");
 const categoriesRef = myDatabase.ref("categories");
 
-class GameState {
+class GameState { //TODO: Clean up this class, some of the code is not being updated, and some of it is unnecessary
   constructor(gameJSON){
     this.updateFromJSON(gameJSON);
     console.log(this.gameID);
@@ -274,17 +281,32 @@ class GameState {
     $("body").html($gameScreenHTML);
     $("body").find("#gameIdLabel").html(`Game ID: ${this.gameID}`);
     $("body").find(".categoriesList").html(this.currentCategories);
+    let gameId = this.gameID;
 
-    //Leave button code
+    //Listener to remove game instance when there are no more players in it
+    //TODO: Remove players when the playerCount hits 0
+    //TODO: Make it so that when a game has a certain number of players, the game becomes unjoinable. This can be stored as an attribute in the GameState
+    gamesRef.child(this.gameID).child("playerCount").on('value', function(dataSnapshot){
+      let playerCount = dataSnapshot.val();
+      if(playerCount == 0){
+        //remove game from database here
+        //gamesRef.child(gameId).remove(); -- currently not working
+      }
+      else if(playerCount >= 5){
+        //make game unjoinable/full here
+      }
+    });
+
+    //Leave button will take user back to start screen and remove that user from the game's data
     let $leaveGameBtn = $("body").find("#leaveBtn");
     $leaveGameBtn.on("click", ()=>{
+      gamesRef.child(this.gameID).child("players").child(uuid).remove();
       renderStartScreen();
     });
 
     //Listener to update categories everytime it is changed in the database
     gamesRef.child(this.gameID).child("currentCategories").on('value', function(dataSnapshot){
       let categoryArray = dataSnapshot.val();
-      console.log(JSON.stringify(categoryArray));
       let categoryElement;
       if(categoryArray != null){
         let $randomCategoriesSet = $("body").find(".categoriesList");
@@ -305,10 +327,47 @@ class GameState {
     });
 
     //Listener to update timer as it changes in the database
+    //TODO: Fix bug where timer will still be ticking for a user if they leave a running game and instantly join another one
+    // -a hacky workaround would be to diable the leave game button until the timer is done, but 
+    //    that doesn't fix the underlying bug, just traps the user so they can't see it
     gamesRef.child(this.gameID).child("timeLeft").on('value', function(dataSnapshot){
       let timeLeft = dataSnapshot.val();
       $("body").find(".theTimer").text(timeLeft);
     });
+
+    //Listeners to update leaderboard when people leave and join the game
+    gamesRef.child(this.gameID).child("players").on('child_added', function(dataSnapshot){ //adds user when joining
+      let userObj = dataSnapshot.val();
+      let $leaderboardList = $("body").find(".leaderboardList");
+      let newUsername = userObj["userName"];
+      let newUserLi = $('<li>/</li>').addClass('leaderboardItem');
+      newUserLi.text(newUsername);
+      newUserLi.attr('id', userObj["userID"]);
+      $leaderboardList.append(newUserLi);
+      gamesRef.child(gameId).child("playerCount").once('value', function(ss){
+        let playerCount = ss.val();
+        console.log(playerCount);
+        playerCount = playerCount + 1;
+        console.log(playerCount);
+        gamesRef.child(gameId).child("playerCount").set(playerCount);
+      });
+    });
+    gamesRef.child(gameId).child("players").on('child_removed', function(dataSnapshot){ //removes user when leaving
+      console.log("child has been removed!");
+      let userObj = dataSnapshot.val();
+      console.log(JSON.stringify(userObj));
+      let removedUserId = userObj["userID"];
+      console.log(removedUserId);
+      $("body").find("#"+removedUserId).remove();
+      gamesRef.child(gameId).child("playerCount").once('value', function(ss){
+        let playerCount = ss.val();
+        console.log(playerCount);
+        playerCount = playerCount - 1;
+        console.log(playerCount);
+        gamesRef.child(gameId).child("playerCount").set(playerCount);
+      });
+    });
+
 
     //Initialize the input fields to be disabled
     let $categoriesInputs = $("body").find(".categoriesInput");
@@ -331,6 +390,8 @@ class GameState {
     });
 
     //Start button code
+    //TODO: Make sure that answer input boxes become available for all players when this button is clicked
+    //TODO: Make sure this button is disabled or enabled appropraitely for all players when clicked or time runs out
     $("body").find("#startBtn").on("click", ()=> {
       gamesRef.child(this.gameID).child("gameRunning").set(true);
       for (let i = 0; i < $categoriesInputs.length; i++) {
@@ -347,37 +408,42 @@ class GameState {
 
 }
 
-function handleGameIdPrompt(givenGameId){
+//Will check to see if given gameId is a valid Id and either join that game or alert 
+// that the Id is invalid; returns true or false if game exists or not
+function handleGameIdPrompt(givenGameId, givenUsername){
   gamesRef.once("value", function(dataSnapshot){
     let ssVal = dataSnapshot.val();
-    console.log(ssVal);
+    //console.log(ssVal);
     if(givenGameId in ssVal){
       console.log("game exists");
       let gameJSON = ssVal[givenGameId];
       let joinableGame = new GameState(gameJSON);
-      console.log(JSON.stringify(joinableGame.toJSON()));
+      let userObj = buildUserObj(givenUsername);
+      console.log(JSON.stringify(userObj));
+      let thisGameRef = gamesRef.child(givenGameId);
+      let newUserRef = thisGameRef.child("players").child(userObj.userID);
+      newUserRef.set(userObj);
+      //console.log(JSON.stringify(joinableGame.toJSON()));
     }
     else{
       console.log("game does not exist");
       alert("Game with that Game ID does not exist, please try again.");
     }
   });
-    /*
-    let games = Object.values(ssVal);
-    console.log(games);
-    for(let i = 0; i < Object.keys(games).length; i++){
-      let currentGameId = games[i].gameID;
-      if(givenGameId == currentGameId){
-        console.log("true");
-        return true;
-      }
-    }
-    console.log("false");
-    return false;
-  });
-  */
 }
 
+//Creates a user object from a given username
+function buildUserObj(givenUsername){
+  let userObj = {};
+  userObj.userID = uuid;
+  userObj.userName = givenUsername;
+  userObj.isReady = false;
+  userObj.userAnswers = [];
+  userObj.currentScore = 0;
+  return userObj;
+}
+
+//Renders the start screen, its css, and its listeners
 function renderStartScreen(){
   $("body").html(`
   <div class="startScreen">
@@ -441,27 +507,10 @@ function renderStartScreen(){
     $(this).attr("backgroundColor","rgb(245, 247, 249)");
   });
   
-
-
-  $("body").find("#createGameBtn").on("click", ()=>{
-    console.log('Create game button clicked.');
-    let newGame = new GameState();
-    console.log(JSON.stringify(newGame.toJSON()));
-    let newGameRef = gamesRef.child(newGame.gameID);
-    newGameRef.set(newGame);
-    //newGameRef.child("players") - reference for adding player
-  });
-
-  $("body").find("#joinGameBtn").on("click", ()=>{
-    console.log('Join game button clicked.');
-    let givenGameId = prompt("Please enter the ID of the game you want to join:");
-    handleGameIdPrompt(givenGameId);
-  });
-
   let userNameTextBox = $("body").find(".screenNameText");
   let userName;
   userNameTextBox.on("blur", ()=>{
-    userName = userNameTextBox.value;
+    userName = userNameTextBox.val();
     if(userName === ""){
       $("body").find("#joinGameBtn").prop('disabled', true);
       $("body").find("#createGameBtn").prop('disabled', true);
@@ -470,69 +519,26 @@ function renderStartScreen(){
       $("body").find("#joinGameBtn").prop('disabled', false);
       $("body").find("#createGameBtn").prop('disabled', false);
     }
-  })
+  });
+
+  //Click listener for create game button, creates a new game instance and adds the creator to the user list
+  $("body").find("#createGameBtn").on("click", ()=>{ 
+    //console.log('Create game button clicked.');
+    let newGame = new GameState();
+    //console.log(JSON.stringify(newGame.toJSON()));
+    let newGameRef = gamesRef.child(newGame.gameID);
+    newGameRef.set(newGame);
+    let userObj = buildUserObj(userName);
+    let newUserRef = newGameRef.child("players").child(userObj.userID);
+    newUserRef.set(userObj);
+  });
+
+  $("body").find("#joinGameBtn").on("click", ()=>{
+    console.log('Join game button clicked.');
+    let givenGameId = prompt("Please enter the ID of the game you want to join:");
+    handleGameIdPrompt(givenGameId, userName);
+  });
   
 }
-
-
-/* ===== Start comment block here for old format
-let createGameBtn = document.getElementById("createGameBtn");
-let joinGameBtn = document.getElementById("joinGameBtn");
-let userNameTextBox = document.querySelector(".screenNameText");
-
-
-function handleGameIdPrompt(givenGameId){
-  myDatabase.ref("games").once("value", function(dataSnapshot){
-    let ssVal = dataSnapshot.val();
-    let games = Object.values(ssVal);
-    console.log(games);
-    for(let i = 0; i < Object.keys(games).length; i++){
-      let currentGameId = games[i].gameID;
-      if(givenGameId == currentGameId){
-        console.log("true");
-        return true;
-      }
-    }
-    console.log("false");
-    return false;
-  });
-}
-
-
-//Click listener for join game button, should render game screen and remove start screen
-joinGameBtn.addEventListener("click", function(event){
-  let givenGameId = prompt("Please enter the ID of the game you want to join:");
-  handleGameIdPrompt(givenGameId);
-  //aGame.render();
-  //document.querySelector(".startScreen").style.display = "none";
-});
-
-//Click listener for create game button, should create a new game object and add it to database and render game screen
-createGameBtn.addEventListener("click", function(event){
-  console.log("click recieved");
-  let newGame = new LobbyGame();
-  console.log(JSON.stringify(newGame.toJSON()));
-  myDatabase.ref("games").push(newGame);
-});
-comment block ends here ====== */
-
-//Enables and disables the create game and join game button base on if there is current user input or not
-//Commented out for faster debugging:
-/*
-userNameTextBox.addEventListener("blur" , function(event){
-  let userName = userNameTextBox.value;
-  if(userName === ""){
-    joinGameBtn.disabled = true;
-    createGameBtn.disabled = true;
-  }
-  else{
-    joinGameBtn.disabled = false;
-    createGameBtn.disabled = false;
-  }
-});
-*/
-
-//joinGameBtn.disabled = false;
-//createGameBtn.disabled = false;
 
 renderStartScreen();

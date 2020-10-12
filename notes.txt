@@ -1,12 +1,10 @@
-
+================== FEATURES AND FUNCTIONALITY ===================
 
 - a lobby should have a max capacity that will be checked to prevent others from joining. This number should be shown to the
     current lobby members as well
 
 - a lobby object in the database should have the list of users currently in it with their user IDs and all their info, 
     the number of users currently in it, if the game is currently running, if all users are ready for the game to start, the lobby code,
-
-- a user object should have the unique userID, the screen name, if their ready, their answers, current points
 
 - !======= How do I want to measure points and display answers to the group? =======!
 
@@ -21,3 +19,17 @@
     -- can probably fix by basing disable on gameRunning and not pressing start
 
 - if a user is in a running game, then leaves and immediately joins another game, it will keep the timer ticking and the categories on screen
+
+- when I try to remove a game after everyone has left, it deletes everything before anyone even leaves
+
+================== IMPROVEMENTS ===================
+- turn off click listeners and such, I think its filling up the cache but I don't fully get what that means yet.
+
+- right now everything is based on firebase as like a dynamic class; go through and either update the local js GameState class, or remove the unessecary code 
+    -- regardless of if I end up updating the local GameState class or not, there is unessecary code within it that I need to clean out
+
+- allow users to pick the length of the round
+
+- only allow game to start when all users click ready; can base this on the "isReady" property of each user, that's what it's for
+
+-general cleanup and refactoring, there's a lot of mess and inefficiency and redundancy, it can definitely be cleaned
