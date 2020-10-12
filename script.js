@@ -97,7 +97,7 @@ let $gameScreenHTML = $(`
   </section>
   <section class="bg-dark text-white leaderboard">
     <h3 class="ml-2">Leaderboard</h3>
-    <p class="ml-3 text-white">(Coming soon)</p>
+    <p class="ml-3 text-white"><ol></ol></p>
   </section>
   <section class="controls bg-dark">
     <div class="controlWrapper">
@@ -359,6 +359,7 @@ function handleGameIdPrompt(givenGameId){
     }
     else{
       console.log("game does not exist");
+      alert("Game with that Game ID does not exist, please try again.");
     }
   });
     /*
@@ -387,8 +388,8 @@ function renderStartScreen(){
         <h1>Welcome!</h1>
         <div class="form">
           <input class="screenNameText" type="text form-text" placeholder="Username">
-          <button class="lobbyBtn" id="createGameBtn" >Create Game</button>
-          <button class="lobbyBtn" id="joinGameBtn" >Join Game</button>
+          <button class="lobbyBtn" id="createGameBtn" disabled>Create Game</button>
+          <button class="lobbyBtn" id="joinGameBtn" disabled>Join Game</button>
         </div>
       </div>
   </div>`);
@@ -448,6 +449,7 @@ function renderStartScreen(){
     console.log(JSON.stringify(newGame.toJSON()));
     let newGameRef = gamesRef.child(newGame.gameID);
     newGameRef.set(newGame);
+    //newGameRef.child("players") - reference for adding player
   });
 
   $("body").find("#joinGameBtn").on("click", ()=>{
@@ -455,6 +457,20 @@ function renderStartScreen(){
     let givenGameId = prompt("Please enter the ID of the game you want to join:");
     handleGameIdPrompt(givenGameId);
   });
+
+  let userNameTextBox = $("body").find(".screenNameText");
+  let userName;
+  userNameTextBox.on("blur", ()=>{
+    userName = userNameTextBox.value;
+    if(userName === ""){
+      $("body").find("#joinGameBtn").prop('disabled', true);
+      $("body").find("#createGameBtn").prop('disabled', true);
+    }
+    else{
+      $("body").find("#joinGameBtn").prop('disabled', false);
+      $("body").find("#createGameBtn").prop('disabled', false);
+    }
+  })
   
 }
 
