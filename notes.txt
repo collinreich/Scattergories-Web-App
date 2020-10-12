@@ -1,18 +1,23 @@
 ================== FEATURES AND FUNCTIONALITY ===================
 
+Lobby related:
+
 - a lobby should have a max capacity that will be checked to prevent others from joining. This number should be shown to the
     current lobby members as well
 
-- a lobby object in the database should have the list of users currently in it with their user IDs and all their info, 
-    the number of users currently in it, if the game is currently running, if all users are ready for the game to start, the lobby code,
-
-- !======= How do I want to measure points and display answers to the group? =======!
+Game mechanics related:
 
 - need a dictionary to check if a word is real
 
 - need a string formatter to make sure it matches the dictioaries
 
 - need a way to check if a word starts with a certain letter
+
+- develop a way to store answers for users in the database -- probably in the userAnswers field of the user json object
+
+- develop a way to compare answers between users -- should this be done with Node?
+
+- distribute points appropriately -- probably in currentScore field of user json object, this can be rendered on leaderboard next to names
 
 ================== KNOWN BUGS ===================
 - only the person who presses start will be able to input answers -- likely because pressing start will disable or enable answer fields 
@@ -22,7 +27,7 @@
 
 - when I try to remove a game after everyone has left, it deletes everything before anyone even leaves
 
-================== IMPROVEMENTS ===================
+================== IMPROVEMENTS / TODO LIST ===================
 - turn off click listeners and such, I think its filling up the cache but I don't fully get what that means yet.
 
 - right now everything is based on firebase as like a dynamic class; go through and either update the local js GameState class, or remove the unessecary code 
@@ -32,4 +37,8 @@
 
 - only allow game to start when all users click ready; can base this on the "isReady" property of each user, that's what it's for
 
--general cleanup and refactoring, there's a lot of mess and inefficiency and redundancy, it can definitely be cleaned
+- general cleanup and refactoring, there's a lot of mess and inefficiency and redundancy, it can definitely be cleaned
+
+- organize leaderboard top to bottom by scores
+
+- display all users answers to everyone so everyone can see what everybody put
