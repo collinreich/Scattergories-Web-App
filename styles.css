@@ -1,3 +1,4 @@
+/*
 * {
   box-sizing: border-box;
   margin: 0;
@@ -69,6 +70,9 @@
   background-color: rgb(245, 247, 249);
 }
 
+*/
+
+/*
 .lobby {
   display: none;
   /*
@@ -84,7 +88,9 @@
     "categories leaderboard controls";
   border: solid black 1px;
   */
-}
+/*}*/
+
+/*
 
 header {
   grid-area: header;
@@ -177,3 +183,4 @@ header {
   justify-content: center;
   align-items: center;
 }
+*/

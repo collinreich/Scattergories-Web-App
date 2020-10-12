@@ -1,9 +1,7 @@
 {
-    "gameID" : 1568,
-    "created" : "time",
+    "created" : "2020-10-02T12:49:00.000Z",
     "gameRunning" : false,
     "maxPlayers" : 5,
-    "status" : "Waiting 1/5",
     "playerCount" : 1,
     "players" : {
         "player1IdHere" : {
@@ -13,5 +11,6 @@
             "answers" : [],
             "currentScore" : 0
         }
-    }
+    },
+    "status" : "Waiting 1/5"
 }
