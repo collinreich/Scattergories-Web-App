@@ -1,4 +1,4 @@
-# Scattergories-Web-App
+# Scattergories Web App
 
 This is an online version of the popular board game Scattergories!
 For anyone unfamiliar: https://en.wikipedia.org/wiki/Scattergories
@@ -15,3 +15,6 @@ same way the board game would be played, just over the internet.
 Every game has a unique ID. You can create your own and have your
 friends join, or join someone else's by typing in the ID of their
 game. The rest functions like normal Scattergories. Enjoy!
+
+The game can be played here:
+https://cpeg470-scattegories-a4955.web.app/
