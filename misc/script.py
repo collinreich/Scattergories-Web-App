@@ -1,3 +1,4 @@
+#Script for converting txt file to JSON
 import json
 
 myDictionary = {}

@@ -27,6 +27,8 @@ Game mechanics related:
 
 - when I try to remove a game after everyone has left, it deletes everything before anyone even leaves
 
+- when a game is created, and someone else joins, then creator leaves, then creator joins back, the leaderboard is duplicated
+
 ================== IMPROVEMENTS / TODO LIST ===================
 - turn off click listeners and such, I think its filling up the cache but I don't fully get what that means yet.
 
