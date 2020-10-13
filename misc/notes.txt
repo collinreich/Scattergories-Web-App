@@ -1,4 +1,4 @@
-================== FEATURES AND FUNCTIONALITY ===================
+================== FEATURES AND FUNCTIONALITY TODO ===================
 
 Lobby related:
 
@@ -25,17 +25,17 @@ Game mechanics related:
 
 - if a user is in a running game, then leaves and immediately joins another game, it will keep the timer ticking and the categories on screen
 
-- when I try to remove a game after everyone has left, it deletes everything before anyone even leaves
+- when I try to remove a game after the playerCount hits 0, it deletes everything before anyone even leaves
 
-- when a game is created, and someone else joins, then creator leaves, then creator joins back, the leaderboard is duplicated
+- when a game is created, and someone else joins, then creator leaves, then creator joins back, the leaderboard is duplicated for the creator
 
 ================== IMPROVEMENTS / TODO LIST ===================
-- turn off click listeners and such, I think its filling up the cache but I don't fully get what that means yet.
+- turn off click listeners and such, I think its filling up the cache
 
 - right now everything is based on firebase as like a dynamic class; go through and either update the local js GameState class, or remove the unessecary code 
     -- regardless of if I end up updating the local GameState class or not, there is unessecary code within it that I need to clean out
 
-- allow users to pick the length of the round
+- allow users to pick the length of each round
 
 - only allow game to start when all users click ready; can base this on the "isReady" property of each user, that's what it's for
 

@@ -1,3 +1,4 @@
+//Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCJo6UuFTI9M-813L0BHIN-0kDbTfzPdR0",
   authDomain: "cpeg470-scattegories-a4955.firebaseapp.com",
@@ -8,6 +9,7 @@ const firebaseConfig = {
   appId: "1:372518034210:web:fceb7dbe02673231cb637b",
 };
 
+//Generate a unique ID for each machine
 let uuid = localStorage.getItem("uuid");
 if (!uuid){
   uuid = Math.floor(1000000000*Math.random());
@@ -15,10 +17,11 @@ if (!uuid){
   //alert(`Your likely unique id is ${uuid}`);
 }
 
+//HTML for the game screen
 let $gameScreenHTML = $(`
 <div class="lobby">
   <header class="bg-primary text-white header">
-    <h1 class="m-3">Scattegories Party Game</h1>
+    <h1 class="m-3">Scattergories Party Game</h1>
   </header>
   <section class="categories bg-dark">
     <h3 class="ml-2 mt-1 text-white">Categories</h3>
@@ -120,19 +123,21 @@ let $gameScreenHTML = $(`
 </div>
 `);
 
+//Initilaizing firebase and several reference points
 firebase.initializeApp(firebaseConfig);
 const myDatabase = firebase.database();
 const gamesRef = myDatabase.ref("games");
 const categoriesRef = myDatabase.ref("categories");
 
+//GameState object to maintain data independently for each game
 class GameState { //TODO: Clean up this class, some of the code is not being updated, and some of it is unnecessary
   constructor(gameJSON){
     this.updateFromJSON(gameJSON);
     console.log(this.gameID);
   }
 
+  //For updating or initializing the attributes of the game state
   updateFromJSON(gameJSON){
-
     if(gameJSON == undefined){
       this.gameID = Math.floor(Math.random() * (999999 - 100000) + 100000);
       this.gameRunning = false;
@@ -154,6 +159,7 @@ class GameState { //TODO: Clean up this class, some of the code is not being upd
     this.render();
   };
 
+  //Converting all attributes of the game state object to a JSON object
   toJSON(){
     let gameObj = {};
     gameObj.gameID = this.gameID;
@@ -335,7 +341,7 @@ class GameState { //TODO: Clean up this class, some of the code is not being upd
       $("body").find(".theTimer").text(timeLeft);
     });
 
-    //Listeners to update leaderboard when people leave and join the game
+    //Listeners to update leaderboard when people leave and join the game -- definitely can and should refactor this
     gamesRef.child(this.gameID).child("players").on('child_added', function(dataSnapshot){ //adds user when joining
       let userObj = dataSnapshot.val();
       let $leaderboardList = $("body").find(".leaderboardList");
@@ -389,7 +395,7 @@ class GameState { //TODO: Clean up this class, some of the code is not being upd
       }
     });
 
-    //Start button code
+    //Start button code - starts game, resets input fields, calls all other necessary methods
     //TODO: Make sure that answer input boxes become available for all players when this button is clicked
     //TODO: Make sure this button is disabled or enabled appropraitely for all players when clicked or time runs out
     $("body").find("#startBtn").on("click", ()=> {
@@ -448,7 +454,7 @@ function renderStartScreen(){
   $("body").html(`
   <div class="startScreen">
       <header class="bg-primary text-white header">
-        <h1 class="m-3">Scattegories Party Game</h1>
+        <h1 class="m-3">Scattergories Party Game</h1>
       </header>
       <div class="startScreenContent">
         <h1>Welcome!</h1>
@@ -507,6 +513,7 @@ function renderStartScreen(){
     $(this).attr("backgroundColor","rgb(245, 247, 249)");
   });
   
+  //Enable or disable buttons based on if there is a username
   let userNameTextBox = $("body").find(".screenNameText");
   let userName;
   userNameTextBox.on("blur", ()=>{
@@ -541,4 +548,5 @@ function renderStartScreen(){
   
 }
 
+// "Driver"
 renderStartScreen();
